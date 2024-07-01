@@ -1,6 +1,6 @@
 package LearnArray;
 
-// copy an array to an new array
+// copy an array to a new array
 
 import java.util.Arrays;
 
