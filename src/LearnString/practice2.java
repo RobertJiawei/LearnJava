@@ -34,3 +34,5 @@ public class practice2 {
         return false;
     }
 }
+
+
