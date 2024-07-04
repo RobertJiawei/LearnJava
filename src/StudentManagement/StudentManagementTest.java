@@ -1,13 +1,169 @@
 package StudentManagement;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class StudentManagementTest {
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+        ArrayList<User> users = new ArrayList<>();
+        boolean exit = false;
+
+        while (!exit) {
+            loginMenu();
+            System.out.println("Please enter your choice");
+            try {
+                int choice = sc.nextInt();
+                sc.nextLine();
+                switch (choice) {
+                    case 1 -> login(users);
+                    case 2 -> register(users);
+                    case 3 -> System.out.println("tbc");
+                    case 4 -> exit = true;
+                    default -> System.out.println("Invalid input. Please enter a number between 1 and 4.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.next();
+            }
+        }
+        sc.close();
+    }
+
+    public static void login(ArrayList<User> users) {
+        System.out.println("Please enter username");
+        String username = sc.next();
+        int flag = checkUser(users, username);
+        if (flag < 0) {
+            System.out.println("User not found!");
+        } else {
+            System.out.println("Please enter password");
+            String password = sc.next();
+            if (password.equals(users.get(flag).getPassword())) {
+                String code = getVerifyCode();
+                System.out.println("Please enter the verify code " + code);
+                String input = sc.next();
+                if (code.equals(input)) {
+                    manageStudent();
+                }
+            }
+        }
+    }
+
+    public static void register(ArrayList<User> users) {
+        users.add(new User(getUsername(users), getPassword(), getId(), getPhone()));
+    }
+
+    public static String getUsername(ArrayList<User> users) {
+        String username;
+        while (true) {
+            System.out.println("Please enter username\nrule: length need between 3 and 15, has to be character + number, cannot be all numbers\n");
+            username = sc.next();
+            if (!checkUsername(username)) {
+                System.out.println("Please follow the username format");
+            } else if (checkUser(users, username) > 0) {
+                System.out.println("username already used!\n");
+            } else break;
+        }
+        return username;
+    }
+
+    public static String getPassword() {
+        String password1;
+        String password2;
+        while (true) {
+            System.out.println("Please enter password");
+            password1 = sc.next();
+            System.out.println("Please enter password again");
+            password2 = sc.next();
+            if (!password1.equals(password2)) {
+                System.out.println("Password does not match\nPlease re-enter\n");
+            } else break;
+        }
+        return password1;
+    }
+
+    public static String getId() {
+        String id;
+        while (true) {
+            System.out.println("Please enter id");
+            id = sc.next();
+            if (!checkId(id)) {
+                System.out.println("Id not accept! Please re-enter\n");
+            } else break;
+        }
+        return id;
+    }
+
+    public static String getPhone() {
+        String phone;
+        while (true) {
+            System.out.println("Please enter phone number");
+            phone = sc.next();
+            if (!checkPhone(phone)) {
+                System.out.println("Phone number not accept! Please re-enter\n");
+            } else break;
+        }
+        return phone;
+    }
+
+    public static int checkUser(ArrayList<User> users, String username) {
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            if (username.equals(user.getUsername())) return i;
+        }
+        return -1;
+    }
+
+    public static String getVerifyCode() {
+        Random r = new Random();
+        StringBuilder code = new StringBuilder();
+        String charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        for (int i = 0; i < 4; i++) {
+            code.append(charPool.charAt(r.nextInt(52)));
+        }
+        code.insert(r.nextInt(5), r.nextInt(9));
+        return code.toString();
+    }
+
+    public static boolean checkUsername(String username) {
+        boolean hasCharacter = false, hasNumber = false;
+        int length = username.length();
+
+        if (length < 3 || length > 15) return false;
+
+        for (int i = 0; i < username.length(); i++) {
+            if (username.charAt(i) <= 58) hasNumber = true;
+            else hasCharacter = true;
+        }
+
+        return hasNumber && hasCharacter;
+    }
+
+    public static boolean checkId(String id) {
+        int length = id.length();
+        if (length != 18 || id.charAt(0) == 48) return false;
+
+        for (int i = 0; i < length - 1; i++) {
+            if (id.charAt(i) > 57 || id.charAt(i) < 48) return false;
+        }
+
+        char c = id.charAt(length - 1);
+        return (c >= '0' && c <= '9') || c == 'x' || c == 'X';
+    }
+
+    public static boolean checkPhone(String phoneNumber) {
+        int length = phoneNumber.length();
+        if (length != 11 || phoneNumber.charAt(0) == 48) return false;
+
+        for (int i = 0; i < length; i++) {
+            if (phoneNumber.charAt(i) > 57 || phoneNumber.charAt(i) < 48) return false;
+        }
+        return true;
+    }
+
+    public static void manageStudent() {
         ArrayList<Student> list = new ArrayList<>();
         boolean exit = false;
 
@@ -30,16 +186,18 @@ public class StudentManagementTest {
                 sc.next();
             }
         }
-        sc.close();
     }
 
     public static void menu() {
         System.out.println("----------Welcome to Student Management System---------\n\n1. Add a student\n2. Delete a student\n3. Edit a student\n4. Search a student\n5. Exit\n");
     }
 
+    public static void loginMenu() {
+        System.out.println("----------Welcome to Student Management System---------\n\n1. Login\n2. Register\n3. Forget Password\n4. Exit\n");
+    }
+
     public static boolean checkId(ArrayList<Student> list, String id) {
-        for (int i = 0; i < list.size(); i++) {
-            Student stu = list.get(i);
+        for (Student stu : list) {
             if (stu.getId().equals(id)) {
                 return false;
             }
@@ -91,8 +249,7 @@ public class StudentManagementTest {
         System.out.println("Please enter the student id that you want to edit: ");
         String id = sc.next();
         boolean isEdit = false;
-        for (int i = 0; i < list.size(); i++) {
-            Student stu = list.get(i);
+        for (Student stu : list) {
             if (id.equals(stu.getId())) {
                 System.out.println("Please edit the student's name");
                 String name = sc.next();
