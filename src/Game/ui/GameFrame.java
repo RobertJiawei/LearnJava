@@ -26,12 +26,17 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener {
     JMenuBar menuBar = new JMenuBar();
     JMenu functionMenu = new JMenu("Function");
     JMenu aboutMenu = new JMenu("About us");
+    JMenu changeMenu = new JMenu("Change Picture");
 
     //sub menu
     JMenuItem replayItem = new JMenuItem("Re-play game");
     JMenuItem reLoginItem = new JMenuItem("Re-Login");
     JMenuItem closeItem = new JMenuItem("Close game");
     JMenuItem accountItem = new JMenuItem("Group");
+    JMenuItem animalItem = new JMenuItem("Animal");
+    JMenuItem girlItem = new JMenuItem("Girl");
+    JMenuItem sportItem = new JMenuItem("Sport");
+
 
     public GameFrame() {
         initFrame();
@@ -59,9 +64,13 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener {
         menuBar.add(functionMenu);
         menuBar.add(aboutMenu);
 
+        functionMenu.add(changeMenu);
         functionMenu.add(replayItem);
         functionMenu.add(reLoginItem);
         functionMenu.add(closeItem);
+        changeMenu.add(animalItem);
+        changeMenu.add(girlItem);
+        changeMenu.add(sportItem);
 
         aboutMenu.add(accountItem);
 
@@ -69,6 +78,9 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener {
         reLoginItem.addActionListener(this);
         closeItem.addActionListener(this);
         accountItem.addActionListener(this);
+        animalItem.addActionListener(this);
+        girlItem.addActionListener(this);
+        sportItem.addActionListener(this);
 
         this.setJMenuBar(menuBar);
     }
@@ -204,6 +216,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
+        Random r = new Random();
         if (obj == replayItem) {
             count = 0;
             initData();
@@ -223,6 +236,23 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener {
             pic.setLocationRelativeTo(null);
             pic.setModal(true);
             pic.setVisible(true);
+        } else if (obj == animalItem) {
+            path = "src/Game/image/animal/animal" + r.nextInt(1, 9) + "/";
+            count = 0;
+            initData();
+            initImage();
+        } else if (obj == girlItem) {
+            path = "src/Game/image/girl/girl" + r.nextInt(1, 13) + "/";
+            count = 0;
+            initData();
+            initImage();
+        } else if (obj == sportItem) {
+            path = "src/Game/image/sport/sport" + r.nextInt(1, 11) + "/";
+            count = 0;
+            initData();
+            initImage();
+        } else {
+            System.out.println("nothing");
         }
     }
 }
