@@ -3,12 +3,15 @@ package Game.ui;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
-public class GameFrame extends JFrame implements KeyListener {
+public class GameFrame extends JFrame implements KeyListener, ActionListener {
     private int[][] data = new int[4][4];
     private final int[][] win = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 0}};
 
@@ -16,6 +19,19 @@ public class GameFrame extends JFrame implements KeyListener {
     int x, y;
 
     String path = "src/Game/image/animal/animal1/";
+
+    int count = 0;
+
+    //init menu bar
+    JMenuBar menuBar = new JMenuBar();
+    JMenu functionMenu = new JMenu("Function");
+    JMenu aboutMenu = new JMenu("About us");
+
+    //sub menu
+    JMenuItem replayItem = new JMenuItem("Re-play game");
+    JMenuItem reLoginItem = new JMenuItem("Re-Login");
+    JMenuItem closeItem = new JMenuItem("Close game");
+    JMenuItem accountItem = new JMenuItem("Group");
 
     public GameFrame() {
         initFrame();
@@ -39,17 +55,6 @@ public class GameFrame extends JFrame implements KeyListener {
     }
 
     private void initMenuBar() {
-        //init menu bar
-        JMenuBar menuBar = new JMenuBar();
-        JMenu functionMenu = new JMenu("Function");
-        JMenu aboutMenu = new JMenu("About us");
-
-        //sub menu
-        JMenuItem replayItem = new JMenuItem("Re-play game");
-        JMenuItem reLoginItem = new JMenuItem("Re-Login");
-        JMenuItem closeItem = new JMenuItem("Close game");
-        JMenuItem accountItem = new JMenuItem("Group");
-
         //add sub menu to menu bar
         menuBar.add(functionMenu);
         menuBar.add(aboutMenu);
@@ -59,6 +64,11 @@ public class GameFrame extends JFrame implements KeyListener {
         functionMenu.add(closeItem);
 
         aboutMenu.add(accountItem);
+
+        replayItem.addActionListener(this);
+        reLoginItem.addActionListener(this);
+        closeItem.addActionListener(this);
+        accountItem.addActionListener(this);
 
         this.setJMenuBar(menuBar);
     }
@@ -76,14 +86,17 @@ public class GameFrame extends JFrame implements KeyListener {
             if (tempArr[i] == 0) {
                 x = i / 4;
                 y = i % 4;
-            } else {
-                data[i / 4][i % 4] = tempArr[i];
             }
+            data[i / 4][i % 4] = tempArr[i];
         }
     }
 
     private void initImage() {
         this.getContentPane().removeAll();
+
+        JLabel counter = new JLabel("Counter: " + count);
+        counter.setBounds(30, 20, 100, 20);
+        this.getContentPane().add(counter);
 
         if (victory()) {
             JLabel winLabel = new JLabel(new ImageIcon("src/Game/image/win.png"));
@@ -143,6 +156,7 @@ public class GameFrame extends JFrame implements KeyListener {
                 data[x][y] = data[x][y + 1];
                 data[x][y + 1] = 0;
                 y++;
+                count++;
                 initImage();
             }
             case 38 -> {
@@ -152,6 +166,7 @@ public class GameFrame extends JFrame implements KeyListener {
                 data[x][y] = data[x + 1][y];
                 data[x + 1][y] = 0;
                 x++;
+                count++;
                 initImage();
             }
             case 39 -> {
@@ -161,6 +176,7 @@ public class GameFrame extends JFrame implements KeyListener {
                 data[x][y] = data[x][y - 1];
                 data[x][y - 1] = 0;
                 y--;
+                count++;
                 initImage();
             }
             case 40 -> {
@@ -170,6 +186,7 @@ public class GameFrame extends JFrame implements KeyListener {
                 data[x][y] = data[x - 1][y];
                 data[x - 1][y] = 0;
                 x--;
+                count++;
                 initImage();
             }
             case 65 -> initImage();
@@ -182,5 +199,30 @@ public class GameFrame extends JFrame implements KeyListener {
 
     public boolean victory() {
         return Arrays.deepEquals(data, win);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object obj = e.getSource();
+        if (obj == replayItem) {
+            count = 0;
+            initData();
+            initImage();
+        } else if (obj == reLoginItem) {
+            this.setVisible(false);
+            new LoginFrame();
+        } else if (obj == closeItem) {
+            System.exit(0);
+        } else if (obj == accountItem) {
+            JDialog pic = new JDialog();
+            JLabel QrCode = new JLabel(new ImageIcon("src/Game/image/about.png"));
+            QrCode.setBounds(0, 0, 258, 258);
+            pic.getContentPane().add(QrCode);
+            pic.setSize(344, 344);
+            pic.setAlwaysOnTop(true);
+            pic.setLocationRelativeTo(null);
+            pic.setModal(true);
+            pic.setVisible(true);
+        }
     }
 }
