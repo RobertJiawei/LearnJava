@@ -5,7 +5,9 @@ import java.util.*;
 public class Test {
     public static void main(String[] args) {
         //p1();
-        p2();
+        //p2();
+        //p3();
+        p4();
     }
 
     private static void p1() {
@@ -71,5 +73,29 @@ public class Test {
         for (Map.Entry<String, Integer> entry : entries) {
             if (entry.getValue() == max) System.out.println(entry.getKey());
         }
+    }
+
+    private static void p3() {
+        TreeMap<Integer, String> tm = new TreeMap<>((o1, o2) -> o2 - o1);
+        tm.comparator();
+        tm.put(1, "a");
+        tm.put(9, "a");
+        tm.put(5, "c");
+        tm.put(2, "a");
+
+        System.out.println(tm);
+    }
+
+    private static void p4() {
+        TreeMap<Student, String> tm = new TreeMap<>();
+        Student s3 = new Student(25, "wangwu");
+        Student s1 = new Student(18, "zhangsan");
+        Student s2 = new Student(20, "zhaosi");
+
+        tm.put(s1, "jiangsu");
+        tm.put(s2, "guangdong");
+        tm.put(s3, "shanghai");
+
+        System.out.println(tm);
     }
 }

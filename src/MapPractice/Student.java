@@ -2,7 +2,7 @@ package MapPractice;
 
 import java.util.Objects;
 
-public class Student {
+public class Student implements Comparable<Student> {
     private String name;
     private int age;
 
@@ -49,5 +49,12 @@ public class Student {
                 "age=" + age +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        int i = this.getAge() - o.getAge();
+        i = i == 0 ? this.getName().compareTo(o.getName()) : i;
+        return i;
     }
 }
