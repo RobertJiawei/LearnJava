@@ -16,10 +16,8 @@ public class Test {
                 int age = Integer.parseInt(sc.nextLine());
                 gl.setAge(age);
                 break;
-            } catch (NumberFormatException e) {
-                System.out.println("age format error");
-            } catch (RuntimeException e) {
-                System.out.println("name length or range error");
+            } catch (AgeOutOfBoundException | NameFormatException e) {
+                e.printStackTrace();
             }
         }
         System.out.println(gl);

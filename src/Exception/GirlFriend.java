@@ -1,5 +1,7 @@
 package Exception;
 
+import javax.naming.Name;
+
 public class GirlFriend {
     private String name;
     private int age;
@@ -29,7 +31,7 @@ public class GirlFriend {
      */
     public void setName(String name) {
         int len = name.length();
-        if (len < 3 || len > 10) throw new RuntimeException();
+        if (len < 3 || len > 10) throw new NameFormatException("Name format not correct");
         this.name = name;
     }
 
@@ -48,7 +50,7 @@ public class GirlFriend {
      * @param age
      */
     public void setAge(int age) {
-        if (age < 18 || age > 40) throw new RuntimeException();
+        if (age < 18 || age > 40) throw new AgeOutOfBoundException("Age is out of bounds");
         this.age = age;
     }
 
